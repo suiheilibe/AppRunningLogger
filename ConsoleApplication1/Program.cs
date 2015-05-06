@@ -12,16 +12,20 @@ namespace AppRunningTimer
     {
         static void Main(string[] args)
         {
-            Rule[] rules;
+            Rule[] rules = null;
             try
             {
-                rules = new[] { new Rule(0, "F:\\GAMES\\mu100\\murasaki.exe", true) };
+                rules = new[] { new Rule(0, new NormalizedPath("F:\\GAMES\\mu100\\murasaki.exe"), true) };
             }
             catch (Exception e)
             {
                 // TODO: 例外記録メソッド
                 Console.WriteLine("An error occurred: '{0}'", e);
             }
+            if (rules == null) {
+                rules = new Rule[0];
+            }
+            var rulesDict = Util.RulesToDictionary(rules);
             var cnt = 0;
             while (true) {
                 var processes = GetProcesses();
