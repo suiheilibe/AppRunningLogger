@@ -31,13 +31,21 @@ namespace AppRunningTimer
                 var processes = GetProcesses();
                 foreach (var p in processes)
                 {
-                    if (p.MainWindowTitle == "murasaki")
+                    try
                     {
-                        cnt++;
-                        Console.WriteLine(cnt);
-                        var module = p.MainModule;
+                        var npath = new NormalizedPath(p.MainModule.FileName);
+                        if (p.MainWindowTitle == "murasaki")
+                        {
+                            cnt++;
+                            Console.WriteLine(cnt);
+                            var module = p.MainModule;
 
-                        Console.WriteLine(module.FileName);
+                            Console.WriteLine(module.FileName);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
                     }
                 }
                 Thread.Sleep(1000);

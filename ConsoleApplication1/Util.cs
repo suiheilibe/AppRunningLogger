@@ -20,14 +20,14 @@ namespace AppRunningTimer
         {
             var dict = new Dictionary<string, Rule>();
             foreach (var rule in rules) {
-                var normalizedPath = rule.normalizedPath;
-                if (dict.ContainsKey(normalizedPath.path))
+                var normalizedPath = rule.NormalizedPath;
+                if (dict.ContainsKey(normalizedPath.RealPath))
                 {
                     // TODO: 重複ルールの扱い
                 }
                 else
                 {
-                    dict.Add(normalizedPath.path, rule);
+                    dict.Add(normalizedPath.RealPath, rule);
                 }
             }
             return dict;
@@ -43,7 +43,7 @@ namespace AppRunningTimer
             foreach (var process in processes) {
                 try
                 {
-
+                    var npath = new NormalizedPath(process.MainModule.FileName);
                 }
                 catch(Exception e)
                 {

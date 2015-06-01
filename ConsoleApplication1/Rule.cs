@@ -8,9 +8,9 @@ namespace AppRunningTimer
 {
     class Rule
     {
-        public ulong appId { get; private set; }
-        public NormalizedPath normalizedPath { get; private set; }
-        public bool enabled { get; private set; }
+        public ulong AppId { get; private set; }
+        public NormalizedPath NormalizedPath { get; private set; }
+        public bool Enabled { get; private set; }
         /// <summary>
         /// 例外
         /// </summary>
@@ -19,9 +19,9 @@ namespace AppRunningTimer
         /// <param name="enabled"></param>
         public Rule(ulong appId, NormalizedPath normalizedPath, bool enabled)
         {
-            this.appId = appId;
-            this.normalizedPath = normalizedPath;
-            this.enabled = enabled;
+            this.AppId = appId;
+            this.NormalizedPath = normalizedPath;
+            this.Enabled = enabled;
         }
     }
 }
