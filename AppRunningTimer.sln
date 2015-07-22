@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppRunningTimer", "AppRunni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{8AEEAF4A-CF5E-41A6-A228-5A8FCE60A139}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Library1", "Library1\Library1.fsproj", "{317ACC98-4662-4DB8-A072-A6066E6570FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8AEEAF4A-CF5E-41A6-A228-5A8FCE60A139}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AEEAF4A-CF5E-41A6-A228-5A8FCE60A139}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AEEAF4A-CF5E-41A6-A228-5A8FCE60A139}.Release|Any CPU.Build.0 = Release|Any CPU
+		{317ACC98-4662-4DB8-A072-A6066E6570FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{317ACC98-4662-4DB8-A072-A6066E6570FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{317ACC98-4662-4DB8-A072-A6066E6570FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{317ACC98-4662-4DB8-A072-A6066E6570FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
