@@ -2,7 +2,7 @@
 // 'F# チュートリアル' プロジェクトを参照してください。
 
 #load "Library1.fs"
-open Library1
+open AppRunningTimer.Program
 
 // ここでライブラリ スクリプト コードを定義します
 
