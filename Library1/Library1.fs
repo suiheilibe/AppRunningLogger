@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open System.Diagnostics
 
 type NormalizedPath(path) =
     let normalizedPath = Path.GetFullPath((new Uri(path)).LocalPath)
@@ -14,7 +15,3 @@ type Rule =
       Enabled : bool }
 
 type RuleX(appId, normalizedPath, enabled) = class end
-    
-
-module Main =
-    let rules = [|{AppId = 0UL; NormalizedPath = NormalizedPath "F:\\GAMES\\mu100\\murasaki.exe"; Enabled = true}|];
