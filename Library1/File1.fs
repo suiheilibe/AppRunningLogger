@@ -2,6 +2,8 @@
 
 open System.Diagnostics
 open System.Threading
+open System.Data
+open System.Data.SQLite
 
 let rules = [|{AppId = 0UL; NormalizedPath = NormalizedPath "F:\\GAMES\\mu100\\murasaki.exe"; Enabled = true}|];
 
@@ -14,3 +16,5 @@ let mainLoop =
                 ()
             with | e -> ()
             Thread.Sleep 1000
+
+let sqliteTest = new SQLiteConnection "Data Source=:memory:;"
