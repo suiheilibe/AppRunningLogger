@@ -57,6 +57,7 @@
     <Compile Include="File1.fs" />
     <Content Include="App.config" />
     <Content Include="packages.config" />
+    <Compile Include="SQLiteTest.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
