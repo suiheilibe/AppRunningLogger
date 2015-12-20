@@ -8,11 +8,22 @@ open SQLite.Net.Platform.Win32
 open System
 open System.Threading.Tasks
 
-type Test() =
+type App () =
     [<PrimaryKey;AutoIncrement>]
-    member val Id : int = 0 with get, set
+    member val Id : uint64 = 0UL with get, set
     [<Indexed>]
-    member val Text : string = "" with get, set
+    member val CanonicalPath : string = "" with get, set
+
+type AppRunningLog () =
+    static let dtUnder = DateTime.MinValue
+    static let tsUnder = TimeSpan.MinValue
+    [<PrimaryKey;AutoIncrement>]
+    member val Id : uint64 = 0UL with get, set
+    [<NotNull;Indexed>]
+    member val AppId : uint64 = 0UL with get, set
+    member val Active : bool = false with get, set
+    member val Begin : DateTime = dtUnder with get, set
+    member val Period : TimeSpan = tsUnder with get, set
 
 let conn =
     new SQLiteAsyncConnection(
@@ -26,15 +37,15 @@ let conn =
         )
     )
 
-let d = conn.CreateTableAsync<Test>().Result.Results.Item(typeof<Test>)
+let d = conn.CreateTableAsync<App>().Result.Results.Item(typeof<App>)
 
 printfn "result: %d" d
 
-Array.init 5 (fun _ -> conn.InsertAsync(new Test(Text = "This is a test string")) :> Task)
+Array.init 5 (fun _ -> conn.InsertAsync(new App(CanonicalPath = "This is a test string")) :> Task)
     |> Task.WaitAll
 
-conn.Table<Test>().ToListAsync().Result
+conn.Table<App>().ToListAsync().Result
     |> Seq.iter (fun x ->
         printfn "Id: %d" x.Id
-        printfn "Text: %s" x.Text
+        printfn "Text: %s" x.CanonicalPath
     )
