@@ -16,14 +16,13 @@ type App () =
 
 type AppRunningLog () =
     static let dtUnder = DateTime.MinValue
-    static let tsUnder = TimeSpan.MinValue
     [<PrimaryKey;AutoIncrement>]
     member val Id : uint64 = 0UL with get, set
     [<NotNull;Indexed>]
     member val AppId : uint64 = 0UL with get, set
     member val Active : bool = false with get, set
     member val Begin : DateTime = dtUnder with get, set
-    member val Period : TimeSpan = tsUnder with get, set
+    member val End : DateTime = dtUnder with get, set
 
 let conn =
     new SQLiteAsyncConnection(
