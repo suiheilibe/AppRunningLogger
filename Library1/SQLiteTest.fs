@@ -1,7 +1,6 @@
 ﻿module SQLiteTest
 
 open SQLite.Net
-open SQLite.Net.Async
 open SQLite.Net.Attributes
 open SQLite.Net.Interop
 open SQLite.Net.Platform.Win32
@@ -9,7 +8,7 @@ open System
 open System.Threading.Tasks
 
 type App () =
-    [<PrimaryKey;AutoIncrement>]
+    [<PrimaryKey>]
     member val Id : uint64 = 0UL with get, set
     [<Indexed>]
     member val CanonicalPath : string = "" with get, set
@@ -25,25 +24,22 @@ type AppRunningLog () =
     member val End : DateTime = dtUnder with get, set
 
 let conn =
-    new SQLiteAsyncConnection(
-        Func<_>(fun () ->
-            new SQLiteConnectionWithLock(
-                new SQLitePlatformWin32(),
-                new SQLiteConnectionString("test.db", true, null, null,
-                    Nullable(SQLiteOpenFlags.ReadWrite ||| SQLiteOpenFlags.Create ||| SQLiteOpenFlags.SharedCache)
-                )
-            )
-        )
+    new SQLiteConnection(
+        new SQLitePlatformWin32(),
+        "test.db",
+        true
     )
 
-let d = conn.CreateTableAsync<App>().Result.Results.Item(typeof<App>)
+let d = conn.CreateTable<App>()
 
 printfn "result: %d" d
 
-Array.init 5 (fun _ -> conn.InsertAsync(new App(CanonicalPath = "This is a test string")) :> Task)
-    |> Task.WaitAll
+[1 .. 5]
+    |> Seq.iter (fun _ ->
+        conn.Insert(new App(CanonicalPath = "This is a test string")) |> ignore
+    )
 
-conn.Table<App>().ToListAsync().Result
+conn.Table<App>()
     |> Seq.iter (fun x ->
         printfn "Id: %d" x.Id
         printfn "Text: %s" x.CanonicalPath
