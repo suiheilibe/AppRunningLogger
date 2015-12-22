@@ -30,8 +30,12 @@ let conn =
         true
     )
 
-conn.ExecuteScalar<string>("PRAGMA synchronous = NORMAL") |> ignore
-conn.ExecuteScalar<string>("PRAGMA journal_mode = WAL") |> ignore
+conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
+conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
+conn.ExecuteScalar<string>("PRAGMA synchronous = NORMAL") |> printfn "%s"
+conn.ExecuteScalar<string>("PRAGMA journal_mode = WAL") |> printfn "%s"
+conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
+conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
 
 let d = conn.CreateTable<App>()
 
