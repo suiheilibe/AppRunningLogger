@@ -3,14 +3,20 @@
 open System.Diagnostics
 open System.Threading
 
-let rules = [|{AppId = 0UL; NormalizedPath = NormalizedPath "F:\\GAMES\\mu100\\murasaki.exe"; Enabled = true}|];
+let getProcesses = Process.GetProcesses : unit -> Process []
 
-let mainLoop =
-    while true do
-        let processes = Process.GetProcesses()
-        for p in processes do
-            try
-                let npath = NormalizedPath p.MainModule.FileName
-                ()
-            with | e -> ()
-            Thread.Sleep 1000
+let rec mainLoop () =
+    let procs = getProcesses()
+    procs
+    |> Array.map (fun x ->
+        try
+            x.MainWindowHandle |> ignore
+            let npath = NormalizedPath x.MainModule.FileName
+            Some (npath, x)
+        with | e -> None
+    )
+    |> Array.choose id
+    |> dict
+    |> ignore
+    Thread.Sleep 1000
+    mainLoop()
