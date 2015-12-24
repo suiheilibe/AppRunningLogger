@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace AppRunningTimer
+namespace AppRunningLogger
 {
     using RulesDictionary = Dictionary<string, Rule>;
 

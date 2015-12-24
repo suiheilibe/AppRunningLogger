@@ -1,4 +1,4 @@
-﻿module AppRunningTimer.File1
+﻿module AppRunningLogger.File1
 
 open System.Diagnostics
 open System.Threading

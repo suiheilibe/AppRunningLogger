@@ -1,4 +1,4 @@
-﻿namespace AppRunningTimer
+﻿namespace AppRunningLogger
 
 open System
 open System.IO

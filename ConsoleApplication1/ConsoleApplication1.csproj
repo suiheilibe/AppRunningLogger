@@ -7,7 +7,7 @@
     <ProjectGuid>{8AEEAF4A-CF5E-41A6-A228-5A8FCE60A139}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AppRunningTimer</RootNamespace>
+    <RootNamespace>AppRunningLogger</RootNamespace>
     <AssemblyName>ConsoleApplication1</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
