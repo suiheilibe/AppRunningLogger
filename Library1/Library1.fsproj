@@ -53,11 +53,11 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="Library1.fs" />
+    <Compile Include="SQLiteTest.fs" />
     <None Include="Script.fsx" />
     <Compile Include="File1.fs" />
     <Content Include="App.config" />
     <Content Include="packages.config" />
-    <Compile Include="SQLiteTest.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

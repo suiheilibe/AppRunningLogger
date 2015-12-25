@@ -2,7 +2,6 @@
 
 open System
 open System.IO
-open System.Diagnostics
 
 type NormalizedPath(path) =
     let normalizedPath =

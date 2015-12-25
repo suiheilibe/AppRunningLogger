@@ -1,13 +1,12 @@
-﻿module SQLiteTest
+﻿module AppRunningLogger.SQLiteTest
 
 open SQLite.Net
 open SQLite.Net.Attributes
 open SQLite.Net.Interop
 open SQLite.Net.Platform.Win32
 open System
-open System.Threading.Tasks
 
-type App () =
+type AppDefinition () =
     [<PrimaryKey;AutoIncrement>]
     member val Id : int64 = 0L with get, set
     [<Indexed>]
@@ -23,30 +22,31 @@ type AppRunningLog () =
     member val Begin : DateTime = dtUnder with get, set
     member val End : DateTime = dtUnder with get, set
 
-let conn =
-    new SQLiteConnection(
-        new SQLitePlatformWin32(),
-        "test.db",
-        true
-    )
+let init () =
+    let conn =
+        new SQLiteConnection(
+            new SQLitePlatformWin32(),
+            "test.db",
+            true
+        )
 
-conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
-conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
-conn.ExecuteScalar<string>("PRAGMA synchronous = NORMAL") |> printfn "%s"
-conn.ExecuteScalar<string>("PRAGMA journal_mode = WAL") |> printfn "%s"
-conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
-conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
+    conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
+    conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
+    conn.ExecuteScalar<string>("PRAGMA synchronous = NORMAL") |> printfn "%s"
+    conn.ExecuteScalar<string>("PRAGMA journal_mode = WAL") |> printfn "%s"
+    conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
+    conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
 
-let d = conn.CreateTable<App>()
+    let d = conn.CreateTable<AppDefinition>()
 
-printfn "result: %d" d
+    printfn "result: %d" d
 
-[1 .. 5]
+    [1 .. 5]
     |> Seq.iter (fun i ->
-        conn.Insert(new App(CanonicalPath = "This is a test string")) |> ignore
+        conn.Insert(new AppDefinition(CanonicalPath = "This is a test string")) |> ignore
     )
 
-conn.Table<App>()
+    conn.Table<AppDefinition>()
     |> Seq.iter (fun x ->
         printfn "Id: %d" x.Id
         printfn "Text: %s" x.CanonicalPath
