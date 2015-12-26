@@ -22,32 +22,23 @@ type AppRunningLog () =
     member val Begin : DateTime = dtUnder with get, set
     member val End : DateTime = dtUnder with get, set
 
-let init () =
-    let conn =
-        new SQLiteConnection(
+let private newSQLiteConnection dbName =
+    new SQLiteConnection(
             new SQLitePlatformWin32(),
-            "test.db",
+            dbName,
             true
         )
 
-    conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
-    conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
-    conn.ExecuteScalar<string>("PRAGMA synchronous = NORMAL") |> printfn "%s"
-    conn.ExecuteScalar<string>("PRAGMA journal_mode = WAL") |> printfn "%s"
-    conn.ExecuteScalar<string>("PRAGMA synchronous") |> printfn "%s"
-    conn.ExecuteScalar<string>("PRAGMA journal_mode") |> printfn "%s"
+let private initSettings (conn : SQLiteConnection) =
+    conn.ExecuteScalar<unit>("PRAGMA synchronous = NORMAL")
+    conn.ExecuteScalar<unit>("PRAGMA journal_mode = WAL")
+    ()
 
+/// <summary>
+/// 
+/// </summary>
+let initMainDB =
+    let conn = newSQLiteConnection "main.db"
+    initSettings conn
     let d = conn.CreateTable<AppDefinition>()
-
-    printfn "result: %d" d
-
-    [1 .. 5]
-    |> Seq.iter (fun i ->
-        conn.Insert(new AppDefinition(CanonicalPath = "This is a test string")) |> ignore
-    )
-
-    conn.Table<AppDefinition>()
-    |> Seq.iter (fun x ->
-        printfn "Id: %d" x.Id
-        printfn "Text: %s" x.CanonicalPath
-    )
+    conn
