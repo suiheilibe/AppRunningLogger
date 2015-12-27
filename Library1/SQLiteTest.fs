@@ -22,6 +22,8 @@ type AppRunningLog () =
     member val Begin : DateTime = dtUnder with get, set
     member val End : DateTime = dtUnder with get, set
 
+type DBConnection = SQLiteConnection
+
 let private newSQLiteConnection dbName =
     new SQLiteConnection(
             new SQLitePlatformWin32(),
@@ -29,7 +31,8 @@ let private newSQLiteConnection dbName =
             true
         )
 
-let private initSettings (conn : SQLiteConnection) =
+let private initialSettings = function
+    | (conn : SQLiteConnection) ->
     conn.ExecuteScalar<unit>("PRAGMA synchronous = NORMAL")
     conn.ExecuteScalar<unit>("PRAGMA journal_mode = WAL")
     ()
@@ -39,6 +42,7 @@ let private initSettings (conn : SQLiteConnection) =
 /// </summary>
 let initMainDB =
     let conn = newSQLiteConnection "main.db"
-    initSettings conn
-    let d = conn.CreateTable<AppDefinition>()
+    initialSettings conn
+    conn.CreateTable<AppDefinition>() |> ignore
+    conn.CreateTable<AppRunningLog>() |> ignore
     conn
