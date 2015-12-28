@@ -2,10 +2,9 @@
 
 open System.Diagnostics
 open System.Threading
-open AppRunningLogger.SQLiteTest
 
 type AppRunningLoggerState =
-    { Connection : DBConnection
+    { Connection : SQLiteTest.DBConnection
     }
 
 let getProcesses = Process.GetProcesses : unit -> Process []
