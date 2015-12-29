@@ -11,7 +11,7 @@ type AppDefinition () =
     [<PrimaryKey;AutoIncrement>]
     member val Id : int64 = 0L with get, set
     [<Indexed>]
-    member val CanonicalPath : string = "" with get, set
+    member val Path : string = "" with get, set
 
 type AppRunningLog () =
     static let dtUnder = DateTime.MinValue
