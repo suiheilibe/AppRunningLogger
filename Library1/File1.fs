@@ -9,13 +9,15 @@ type AppRunningLoggerState =
 
 let getProcesses = Process.GetProcesses : unit -> Process []
 
+let canonicalize x = (CanonicalPath x).RawPath
+
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = SQLiteTest.getAppDefinition state.Connection
     let appDict =
         appDefs
         |> Seq.map (fun x ->
             try
-                Some ((CanonicalPath x.Path).RawPath, x)
+                Some (canonicalize x.Path, x)
             with | ex -> None
             )
         |> Seq.choose id
@@ -27,7 +29,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
             try
                 x.MainWindowHandle |> ignore
                 let fileName = x.MainModule.FileName
-                Some ((CanonicalPath fileName).RawPath, fileName) // (<Canonicalized path>, <`Process` path>)
+                Some (canonicalize fileName, fileName) // (<Canonicalized path>, <`Process` path>)
             with | ex -> None
             )
         |> Array.choose id
