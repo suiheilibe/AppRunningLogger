@@ -2,9 +2,11 @@
 
 open System.Diagnostics
 open System.Threading
+open System.Collections.Generic
 
 type AppRunningLoggerState =
-    { Connection : SQLiteTest.DBConnection
+    { Connection     : SQLiteTest.DBConnection
+      AppDefinitions : SQLiteTest.AppDefinition []
     }
 
 let getProcesses = Process.GetProcesses : unit -> Process []
@@ -12,15 +14,15 @@ let getProcesses = Process.GetProcesses : unit -> Process []
 let canonicalize x = (CanonicalPath x).RawPath
 
 let rec mainLoop (state : AppRunningLoggerState) =
-    let appDefs = SQLiteTest.getAppDefinition state.Connection
+    let appDefs = state.AppDefinitions
     let appDict =
         appDefs
-        |> Seq.map (fun x ->
+        |> Array.map (fun x ->
             try
                 Some (canonicalize x.Path, x)
             with | ex -> None
             )
-        |> Seq.choose id
+        |> Array.choose id
         |> dict
     let procs = getProcesses ()
     let procPathPairs =
@@ -40,10 +42,14 @@ let rec mainLoop (state : AppRunningLoggerState) =
     |> Array.map (fun x -> SQLiteTest.AppDefinition(Path = snd x))
     |> SQLiteTest.addAppDefinition state.Connection
     |> printfn "new: %d"
+    
     Thread.Sleep 1000
     mainLoop state
    
 let startMainLoop () =
-    let conn = SQLiteTest.initMainDB ()
-    mainLoop { Connection = conn }
+    try
+        let conn = SQLiteTest.initMainDB ()
+        let appDefs = SQLiteTest.getAppDefinition conn
+        mainLoop { Connection = conn; AppDefinitions = Array.ofSeq appDefs }
+    with | ex -> printfn "%s" ex.StackTrace
     ()
