@@ -35,21 +35,21 @@ let rec mainLoop (state : AppRunningLoggerState) =
             with | ex -> None
             )
         |> Array.choose id
-    let newPathPairs =
+    let newAppDefs =
         procPathPairs
         |> Array.filter (fun x -> fst x |> appDict.ContainsKey |> not)
-    newPathPairs
-    |> Array.map (fun x -> SQLiteTest.AppDefinition(Path = snd x))
+        |> Array.map (fun x -> SQLiteTest.AppDefinition(Path = snd x))
+    newAppDefs
     |> SQLiteTest.addAppDefinition state.Connection
-    |> printfn "new: %d"
-    
+    printfn "new: %d" newAppDefs.Length
+    let nextAppDefs = Array.append appDefs newAppDefs
     Thread.Sleep 1000
-    mainLoop state
+    mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs }
    
 let startMainLoop () =
     try
         let conn = SQLiteTest.initMainDB ()
-        let appDefs = SQLiteTest.getAppDefinition conn
-        mainLoop { Connection = conn; AppDefinitions = Array.ofSeq appDefs }
+        let appDefs = SQLiteTest.getAppDefinition conn |> Array.ofSeq
+        mainLoop { Connection = conn; AppDefinitions = appDefs }
     with | ex -> printfn "%s" ex.StackTrace
     ()

@@ -27,15 +27,15 @@ type DBConnection = SQLiteConnection
 
 let private newSQLiteConnection dbName =
     new SQLiteConnection(
-            new SQLitePlatformWin32(),
+            new SQLitePlatformWin32 (),
             dbName,
             true
         )
 
 let private initialSettings = function
     | (conn : SQLiteConnection) ->
-    conn.ExecuteScalar<string>("PRAGMA synchronous = NORMAL") |> ignore
-    conn.ExecuteScalar<string>("PRAGMA journal_mode = WAL") |> ignore
+    conn.ExecuteScalar<string> "PRAGMA synchronous = NORMAL" |> ignore
+    conn.ExecuteScalar<string> "PRAGMA journal_mode = WAL" |> ignore
     ()
 
 /// <summary>
@@ -44,12 +44,12 @@ let private initialSettings = function
 let initMainDB () =
     let conn = newSQLiteConnection "main.db"
     initialSettings conn
-    conn.CreateTable<AppDefinition>() |> ignore
-    conn.CreateTable<AppRunningLog>() |> ignore
+    conn.CreateTable<AppDefinition> () |> ignore
+    conn.CreateTable<AppRunningLog> () |> ignore
     conn
 
 let getAppDefinition (conn : DBConnection) =
-    conn.Table<AppDefinition>()
+    conn.Table<AppDefinition> ()
 
 let addAppDefinition (conn : DBConnection) (appDefs : IEnumerable<AppDefinition>) =
-    conn.InsertAll appDefs
+    conn.InsertAll appDefs |> ignore
