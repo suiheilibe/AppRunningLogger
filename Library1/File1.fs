@@ -13,17 +13,29 @@ let getProcesses = Process.GetProcesses : unit -> Process []
 
 let canonicalize x = (CanonicalPath x).RawPath
 
+let canonicalizeList =
+    List.map (fun x ->
+        try
+            Some (canonicalize x)
+        with | ex -> None
+        )
+
+let toDictWithOptionalKeys values keys =
+    List.zip keys values
+    |> List.choose (fun x ->
+        match x with
+        | (Some a, b) -> Some (a, b)
+        | (None,   b) -> None
+        )
+    |> dict
+
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
     let appDict =
         appDefs
-        |> List.map (fun x ->
-            try
-                Some (canonicalize x.Path, x)
-            with | ex -> None
-            )
-        |> List.choose id
-        |> dict
+        |> List.map (fun x -> x.Path)
+        |> canonicalizeList
+        |> toDictWithOptionalKeys appDefs
     let procs = getProcesses () |> List.ofArray
     let procPathPairs =
         procs
