@@ -11,41 +11,44 @@ type AppRunningLoggerState =
 
 let getProcesses = Process.GetProcesses : unit -> Process []
 
-let canonicalize x = (CanonicalPath x).RawPath
+let canonicalize x =
+    try
+        Some (CanonicalPath x).RawPath
+    with
+        ex -> None
 
-let canonicalizeList =
-    List.map (fun x ->
-        try
-            Some (canonicalize x)
-        with | ex -> None
-        )
-
-let toDictWithOptionalKeys values keys =
-    List.zip keys values
+let chooseListFst xs =
+    xs
     |> List.choose (function
         | (Some a, b) -> Some (a, b)
         | (None,   b) -> None
         )
+
+let toDictWithOptionalKeys values keys =
+    List.zip keys values
+    |> chooseListFst
     |> dict
 
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
     let appDict =
         appDefs
-        |> List.map (fun x -> x.Path)
-        |> canonicalizeList
+        |> List.map (fun x -> canonicalize x.Path)
         |> toDictWithOptionalKeys appDefs
-    let procs = getProcesses () |> List.ofArray
-    let procPathPairs =
+    let procs = getProcesses() |> List.ofArray
+    let procPaths =
         procs
         |> List.map (fun x ->
             try
                 x.MainWindowHandle |> ignore
-                let fileName = x.MainModule.FileName
-                Some (canonicalize fileName, fileName) // (<Canonicalized path>, <`Process` path>)
-            with | ex -> None
+                Some x.MainModule.FileName
+            with
+                ex -> None
             )
         |> List.choose id
+    let procPathPairs =
+        List.zip (procPaths |> List.map canonicalize) procPaths
+        |> chooseListFst
     let newAppDefs =
         procPathPairs
         |> List.filter (fun x -> fst x |> appDict.ContainsKey |> not)
@@ -57,9 +60,9 @@ let rec mainLoop (state : AppRunningLoggerState) =
     Thread.Sleep 1000
     mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs }
    
-let startMainLoop () =
+let startMainLoop() =
     try
-        let conn = SQLiteTest.initMainDB ()
+        let conn = SQLiteTest.initMainDB()
         let appDefs = SQLiteTest.getAppDefinition conn |> List.ofSeq
         mainLoop { Connection = conn; AppDefinitions = appDefs }
     with | ex -> printfn "%s" ex.StackTrace
