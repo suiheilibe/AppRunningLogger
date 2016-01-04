@@ -22,8 +22,7 @@ let canonicalizeList =
 
 let toDictWithOptionalKeys values keys =
     List.zip keys values
-    |> List.choose (fun x ->
-        match x with
+    |> List.choose (function
         | (Some a, b) -> Some (a, b)
         | (None,   b) -> None
         )
