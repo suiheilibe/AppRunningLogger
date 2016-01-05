@@ -9,6 +9,11 @@ type private AppRunningLoggerState =
       AppDefinitions : SQLiteTest.AppDefinition list
     }
 
+type private ProcessSub =
+    { FileName : string
+      Id       : int
+    }
+
 let private getProcesses = Process.GetProcesses : unit -> Process []
 
 let private canonicalize x =
@@ -36,23 +41,22 @@ let rec private mainLoop (state : AppRunningLoggerState) =
         |> List.map (fun x -> canonicalize x.Path)
         |> toDictWithOptionalKeys appDefs
     let procs = getProcesses() |> List.ofArray
-    let procPaths =
+    let procSubs =
         procs
         |> List.map (fun x ->
             try
-                x.MainWindowHandle |> ignore
-                Some x.MainModule.FileName
+                Some { FileName = x.MainModule.FileName; Id = x.Id }
             with
                 ex -> None
             )
         |> List.choose id
-    let procPathPairs =
-        List.zip (procPaths |> List.map canonicalize) procPaths
+    let procPairs=
+        List.zip (procSubs |> List.map (fun x -> canonicalize x.FileName)) procSubs
         |> chooseListByFst
     let newAppDefs =
-        procPathPairs
+        procPairs
         |> List.filter (fun x -> fst x |> appDict.ContainsKey |> not)
-        |> List.map (fun x -> SQLiteTest.AppDefinition(Path = snd x))
+        |> List.map (fun x -> SQLiteTest.AppDefinition(Path = (snd x).FileName))
     newAppDefs
     |> SQLiteTest.addAppDefinition state.Connection
     printfn "new: %d" newAppDefs.Length
