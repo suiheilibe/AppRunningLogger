@@ -17,7 +17,7 @@ let private canonicalize x =
     with
         ex -> None
 
-let private chooseListFst xs =
+let private chooseListByFst xs =
     xs
     |> List.choose (function
         | (Some a, b) -> Some (a, b)
@@ -26,7 +26,7 @@ let private chooseListFst xs =
 
 let private toDictWithOptionalKeys values keys =
     List.zip keys values
-    |> chooseListFst
+    |> chooseListByFst
     |> dict
 
 let rec private mainLoop (state : AppRunningLoggerState) =
@@ -48,7 +48,7 @@ let rec private mainLoop (state : AppRunningLoggerState) =
         |> List.choose id
     let procPathPairs =
         List.zip (procPaths |> List.map canonicalize) procPaths
-        |> chooseListFst
+        |> chooseListByFst
     let newAppDefs =
         procPathPairs
         |> List.filter (fun x -> fst x |> appDict.ContainsKey |> not)
