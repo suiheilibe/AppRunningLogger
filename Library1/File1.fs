@@ -34,6 +34,16 @@ let toDictWithOptionalKeys values keys =
     |> chooseListByFst
     |> dict
 
+let procToProcSub (procs : Process list) =
+    procs
+    |> List.map (fun x ->
+        try
+            Some { FileName = x.MainModule.FileName; Id = x.Id }
+        with
+            ex -> None
+        )
+    |> List.choose id
+
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
     let appDict =
@@ -41,15 +51,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
         |> List.map (fun x -> canonicalize x.Path)
         |> toDictWithOptionalKeys appDefs
     let procs = getProcesses() |> List.ofArray
-    let procSubs =
-        procs
-        |> List.map (fun x ->
-            try
-                Some { FileName = x.MainModule.FileName; Id = x.Id }
-            with
-                ex -> None
-            )
-        |> List.choose id
+    let procSubs = procToProcSub procs
     let procPairs=
         List.zip (procSubs |> List.map (fun x -> canonicalize x.FileName)) procSubs
         |> chooseListByFst
