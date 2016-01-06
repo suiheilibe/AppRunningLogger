@@ -25,18 +25,18 @@ type AppRunningLog () =
 
 type DBConnection = SQLiteConnection
 
-let private newSQLiteConnection dbName =
+let newSQLiteConnection dbName =
     new SQLiteConnection(
             new SQLitePlatformWin32 (),
             dbName,
             true
         )
 
-let private initialSettings = function
+let initialSettings = function
     | (conn : SQLiteConnection) ->
-    conn.ExecuteScalar<string> "PRAGMA synchronous = NORMAL" |> ignore
-    conn.ExecuteScalar<string> "PRAGMA journal_mode = WAL" |> ignore
-    ()
+        conn.ExecuteScalar<string> "PRAGMA synchronous = NORMAL" |> ignore
+        conn.ExecuteScalar<string> "PRAGMA journal_mode = WAL" |> ignore
+        ()
 
 /// <summary>
 /// 

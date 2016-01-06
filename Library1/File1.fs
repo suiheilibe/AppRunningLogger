@@ -4,37 +4,37 @@ open System.Diagnostics
 open System.Threading
 open System.Collections.Generic
 
-type private AppRunningLoggerState =
+type AppRunningLoggerState =
     { Connection     : SQLiteTest.DBConnection
       AppDefinitions : SQLiteTest.AppDefinition list
     }
 
-type private ProcessSub =
+type ProcessSub =
     { FileName : string
       Id       : int
     }
 
-let private getProcesses = Process.GetProcesses : unit -> Process []
+let getProcesses = Process.GetProcesses : unit -> Process []
 
-let private canonicalize x =
+let canonicalize x =
     try
         Some (CanonicalPath x).RawPath
     with
         ex -> None
 
-let private chooseListByFst xs =
+let chooseListByFst xs =
     xs
     |> List.choose (function
         | (Some a, b) -> Some (a, b)
         | (None,   b) -> None
         )
 
-let private toDictWithOptionalKeys values keys =
+let toDictWithOptionalKeys values keys =
     List.zip keys values
     |> chooseListByFst
     |> dict
 
-let rec private mainLoop (state : AppRunningLoggerState) =
+let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
     let appDict =
         appDefs
