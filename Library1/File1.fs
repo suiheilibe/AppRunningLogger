@@ -49,7 +49,7 @@ let procToProcSub (procs : Process list) =
 extern nativeint GetForegroundWindow();
 
 [<DllImport("user32.dll", SetLastError=true)>]
-extern uint32 GetWindowThreadProcessId(nativeint hWnd, uint32 *lpdwProcessId);
+extern uint32 GetWindowThreadProcessId(nativeint hWnd, uint32& lpdwProcessId);
 
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
@@ -73,7 +73,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
     let hwnd = GetForegroundWindow()
     printfn "%d" hwnd
     let mutable pid = 0u
-    printfn "%d" <| GetWindowThreadProcessId(hwnd, &&pid)
+    printfn "%d" <| GetWindowThreadProcessId(hwnd, &pid)
     printfn "%d" pid
     Thread.Sleep 1000
     mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs }
