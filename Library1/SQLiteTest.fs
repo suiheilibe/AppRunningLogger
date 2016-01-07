@@ -27,7 +27,7 @@ type DBConnection = SQLiteConnection
 
 let newSQLiteConnection dbName =
     new SQLiteConnection(
-            new SQLitePlatformWin32 (),
+            new SQLitePlatformWin32(),
             dbName,
             true
         )
@@ -44,12 +44,16 @@ let initialSettings = function
 let initMainDB () =
     let conn = newSQLiteConnection "main.db"
     initialSettings conn
-    conn.CreateTable<AppDefinition> () |> ignore
-    conn.CreateTable<AppRunningLog> () |> ignore
+    conn.CreateTable<AppDefinition>() |> ignore
+    conn.CreateTable<AppRunningLog>() |> ignore
     conn
 
 let getAppDefinition (conn : DBConnection) =
-    conn.Table<AppDefinition> ()
+    conn.Table<AppDefinition>()
 
 let addAppDefinition (conn : DBConnection) (appDefs : IEnumerable<AppDefinition>) =
     conn.InsertAll appDefs |> ignore
+
+let getAppRunningLog (conn : DBConnection) minId =
+    conn.Table<AppRunningLog>().Where(fun x -> x.Id >= minId)
+
