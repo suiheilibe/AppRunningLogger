@@ -8,6 +8,7 @@ open System.Runtime.InteropServices
 type AppRunningLoggerState =
     { Connection     : SQLiteTest.DBConnection
       AppDefinitions : SQLiteTest.AppDefinition list
+      AppRunningLogs : SQLiteTest.AppRunningLog list
     }
 
 type ProcessSub =
@@ -76,12 +77,13 @@ let rec mainLoop (state : AppRunningLoggerState) =
     printfn "%d" <| GetWindowThreadProcessId(hwnd, &pid)
     printfn "%d" pid
     Thread.Sleep 1000
-    mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs }
+    mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs; AppRunningLogs = state.AppRunningLogs }
    
 let startMainLoop() =
     try
         let conn = SQLiteTest.initMainDB()
         let appDefs = SQLiteTest.getAppDefinition conn |> List.ofSeq
-        mainLoop { Connection = conn; AppDefinitions = appDefs }
+        let appLogs = SQLiteTest.getAppRunningLog conn 0L |> List.ofSeq
+        mainLoop { Connection = conn; AppDefinitions = appDefs; AppRunningLogs = appLogs }
     with | ex -> printfn "%s" ex.StackTrace
     ()
