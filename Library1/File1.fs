@@ -3,7 +3,6 @@
 open System.Diagnostics
 open System.Threading
 open System.Collections.Generic
-open System.Runtime.InteropServices
 
 type AppRunningLoggerState =
     { Connection     : SQLiteTest.DBConnection
@@ -46,11 +45,6 @@ let procToProcSub (procs : Process list) =
         )
     |> List.choose id
 
-[<DllImport("user32.dll")>]
-extern nativeint GetForegroundWindow();
-
-[<DllImport("user32.dll", SetLastError=true)>]
-extern uint32 GetWindowThreadProcessId(nativeint hWnd, uint32& lpdwProcessId);
 
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
@@ -71,10 +65,10 @@ let rec mainLoop (state : AppRunningLoggerState) =
     |> SQLiteTest.addAppDefinition state.Connection
     printfn "new: %d" newAppDefs.Length
     let nextAppDefs = List.append newAppDefs appDefs
-    let hwnd = GetForegroundWindow()
+    let hwnd = Win32API.GetForegroundWindow()
     printfn "%d" hwnd
     let mutable pid = 0u
-    printfn "%d" <| GetWindowThreadProcessId(hwnd, &pid)
+    printfn "%d" <| Win32API.GetWindowThreadProcessId(hwnd, &pid)
     printfn "%d" pid
     Thread.Sleep 1000
     mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs; AppRunningLogs = state.AppRunningLogs }

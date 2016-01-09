@@ -53,6 +53,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="Library1.fs" />
+    <Compile Include="Win32API.fs" />
     <Compile Include="SQLiteTest.fs" />
     <None Include="Script.fsx" />
     <Compile Include="File1.fs" />
