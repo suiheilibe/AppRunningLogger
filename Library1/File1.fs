@@ -1,5 +1,6 @@
 ﻿module AppRunningLogger.File1
 
+open System
 open System.Diagnostics
 open System.Threading
 open System.Collections.Generic
@@ -16,6 +17,8 @@ type ProcessSub =
     }
 
 let getProcesses = Process.GetProcesses : unit -> Process []
+
+let dateTimeNow() = DateTime.Now : DateTime
 
 let canonicalize x =
     try
@@ -54,6 +57,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
         |> toDictWithOptionalKeys appDefs
     let procs = getProcesses() |> List.ofArray
     let procSubs = procToProcSub procs
+    // (<Canonicalized Path> * ProcessSub)
     let procPairs=
         List.zip (procSubs |> List.map (fun x -> canonicalize x.FileName)) procSubs
         |> chooseListByFst
@@ -70,6 +74,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
     let mutable pid = 0u
     printfn "%d" <| Win32API.GetWindowThreadProcessId(hwnd, &pid)
     printfn "%d" pid
+    printfn "%s" <| dateTimeNow().ToString()
     Thread.Sleep 1000
     mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs; AppRunningLogs = state.AppRunningLogs }
    
