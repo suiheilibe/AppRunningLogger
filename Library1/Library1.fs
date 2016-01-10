@@ -12,3 +12,9 @@ type CanonicalPath(path) =
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             .ToUpperInvariant()
     member this.RawPath with get () = canonicalPath
+    override this.GetHashCode() = this.RawPath.GetHashCode()
+    override this.Equals(obj : obj) =
+        match obj with
+        | null -> false
+        | :? CanonicalPath as cpath -> this.RawPath.Equals(cpath.RawPath)
+        | _ -> false
