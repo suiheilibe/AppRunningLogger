@@ -22,7 +22,7 @@ let dateTimeNow() = DateTime.Now : DateTime
 
 let canonicalize x =
     try
-        Some (CanonicalPath x).RawPath
+        Some (CanonicalPath x)
     with
         ex -> None
 
@@ -57,7 +57,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
         |> toDictWithOptionalKeys appDefs
     let procs = getProcesses() |> List.ofArray
     let procSubs = procToProcSub procs
-    // (<Canonicalized Path> * ProcessSub)
+    // (CanonicalPath * ProcessSub)
     let procPairs=
         List.zip (procSubs |> List.map (fun x -> canonicalize x.FileName)) procSubs
         |> chooseListByFst
