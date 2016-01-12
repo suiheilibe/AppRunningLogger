@@ -48,7 +48,6 @@ let procToProcSub (procs : Process list) =
         )
     |> List.choose id
 
-
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
     let appDict =
@@ -61,6 +60,16 @@ let rec mainLoop (state : AppRunningLoggerState) =
     let procPairs=
         List.zip (procSubs |> List.map (fun x -> canonicalize x.FileName)) procSubs
         |> chooseListByFst
+    let hittedAppDefs =
+        procPairs
+        |> List.map (fun x ->
+            let key = fst x
+            try
+                Some appDict.[key]
+            with
+                ex -> None
+            )
+        |> List.choose id
     let newAppDefs =
         procPairs
         |> List.filter (fun x -> fst x |> appDict.ContainsKey |> not)
