@@ -65,7 +65,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
         |> List.map (fun x ->
             let key = fst x
             try
-                Some appDict.[key]
+                Some (key, appDict.[key])
             with
                 ex -> None
             )
