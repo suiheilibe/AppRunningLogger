@@ -6,7 +6,7 @@ open System.IO
 /// <summary>
 /// 
 /// </summary>
-type CanonicalPath(path) = 
+type CanonicalPath(path) =
     let canonicalPath = 
         Path.GetFullPath((new Uri(path)).LocalPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             .ToUpperInvariant()
@@ -17,3 +17,5 @@ type CanonicalPath(path) =
         | null -> false
         | :? CanonicalPath as cpath -> this.RawPath.Equals(cpath.RawPath)
         | _ -> false
+    interface IEquatable<CanonicalPath> with
+        member this.Equals(o : CanonicalPath) = this.RawPath.Equals(o.RawPath)
