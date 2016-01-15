@@ -48,6 +48,12 @@ let procToProcSub (procs : Process list) =
         )
     |> List.choose id
 
+let getForegroundPid() =
+    let hwnd = Win32API.GetForegroundWindow()
+    let mutable pid = 0u
+    Win32API.GetWindowThreadProcessId(hwnd, &pid) |> ignore
+    pid
+
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
     let appDict =
@@ -76,13 +82,9 @@ let rec mainLoop (state : AppRunningLoggerState) =
         |> List.map (fun x -> SQLiteTest.AppDefinition(Path = (snd x).FileName))
     newAppDefs
     |> SQLiteTest.addAppDefinition state.Connection
+    printfn "%d" <| getForegroundPid()
     printfn "new: %d" newAppDefs.Length
     let nextAppDefs = List.append newAppDefs appDefs
-    let hwnd = Win32API.GetForegroundWindow()
-    printfn "%d" hwnd
-    let mutable pid = 0u
-    printfn "%d" <| Win32API.GetWindowThreadProcessId(hwnd, &pid)
-    printfn "%d" pid
     printfn "%s" <| dateTimeNow().ToString()
     Thread.Sleep 1000
     mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs; AppRunningLogs = state.AppRunningLogs }
