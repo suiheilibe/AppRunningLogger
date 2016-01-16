@@ -82,6 +82,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
         |> List.map (fun x -> SQLiteTest.AppDefinition(Path = (snd x).FileName))
     newAppDefs
     |> SQLiteTest.addAppDefinition state.Connection
+    let nextAppDefs1 = SQLiteTest.getAppDefinition state.Connection |> List.ofSeq
     printfn "%d" <| getForegroundPid()
     printfn "new: %d" newAppDefs.Length
     let nextAppDefs = List.append newAppDefs appDefs
