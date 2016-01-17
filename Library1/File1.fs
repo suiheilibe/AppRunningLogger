@@ -48,6 +48,17 @@ let procToProcSub (procs : Process list) =
         )
     |> List.choose id
 
+let getHitAppDefs procPairs (appDict : IDictionary<_,_>) =
+    procPairs
+    |> List.map (fun x ->
+        let key = fst x
+        try
+            Some (key, appDict.[key])
+        with
+            ex -> None
+        )
+    |> List.choose id
+
 let getForegroundPid() =
     let hwnd = Win32API.GetForegroundWindow()
     let mutable pid = 0u
@@ -66,16 +77,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
     let procPairs=
         List.zip (procSubs |> List.map (fun x -> canonicalize x.FileName)) procSubs
         |> chooseListByFst
-    let hittedAppDefs =
-        procPairs
-        |> List.map (fun x ->
-            let key = fst x
-            try
-                Some (key, appDict.[key])
-            with
-                ex -> None
-            )
-        |> List.choose id
+    let hitAppDefs = getHitAppDefs procPairs appDict
     let newAppDefs =
         procPairs
         |> List.filter (fun x -> fst x |> appDict.ContainsKey |> not)
