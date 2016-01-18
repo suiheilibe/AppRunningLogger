@@ -12,6 +12,8 @@ type AppDefinition () =
     member val Id : int64 = 0L with get, set
     [<Indexed>]
     member val Path : string = "" with get, set
+    interface IComparable<AppDefinition> with
+        member this.CompareTo(o : AppDefinition) = this.Id.CompareTo(o.Id)
 
 type AppRunningLog () =
     static let dtUnder = DateTime.MinValue
