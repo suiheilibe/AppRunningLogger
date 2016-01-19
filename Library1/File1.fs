@@ -20,12 +20,20 @@ let getProcesses = Process.GetProcesses : unit -> Process []
 
 let dateTimeNow() = DateTime.Now : DateTime
 
+/// <summary>
+/// パス文字列から正規化パス(CanonicalPath)を作成する
+/// </summary>
+/// <param name="x"></param>
 let canonicalize x =
     try
         Some (CanonicalPath x)
     with
         ex -> None
 
+/// <summary>
+/// fstにoptionを持つタプルのリストをoptionタプルのリストに変換する
+/// </summary>
+/// <param name="xs"></param>
 let chooseListByFst xs =
     xs
     |> List.choose (function
@@ -38,6 +46,10 @@ let toDictWithOptionalKeys values keys =
     |> chooseListByFst
     |> dict
 
+/// <summary>
+/// ProcessのリストからProcSubのリストを作成する
+/// </summary>
+/// <param name="procs"></param>
 let procToProcSub (procs : Process list) =
     procs
     |> List.map (fun x ->
@@ -59,6 +71,9 @@ let getHitAppDefs procPairs (appDict : IDictionary<_,_>) =
         )
     |> List.choose id
 
+/// <summary>
+/// 最前面ウィンドウを作成したプロセスのPIDを取得する
+/// </summary>
 let getForegroundPid() =
     let hwnd = Win32API.GetForegroundWindow()
     let mutable pid = 0u
