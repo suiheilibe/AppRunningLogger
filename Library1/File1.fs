@@ -60,6 +60,11 @@ let procToProcSub (procs : Process list) =
         )
     |> List.choose id
 
+/// <summary>
+/// appDictからprocPairに含まれるものを取り出す
+/// </summary>
+/// <param name="procPairs"></param>
+/// <param name="appDict"></param>
 let getHitAppDefs procPairs (appDict : IDictionary<_,_>) =
     procPairs
     |> List.map (fun x ->
