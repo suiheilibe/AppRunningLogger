@@ -41,6 +41,11 @@ let chooseListByFst xs =
         | (None,   b) -> None
         )
 
+/// <summary>
+/// optionのリストkeysをキーとしたディクショナリを作成
+/// </summary>
+/// <param name="values"></param>
+/// <param name="keys"></param>
 let toDictWithOptionalKeys values keys =
     List.zip keys values
     |> chooseListByFst
