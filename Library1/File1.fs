@@ -90,8 +90,17 @@ let getForegroundPid() =
     Win32API.GetWindowThreadProcessId(hwnd, &pid) |> ignore
     pid
 
+/// <summary>
+/// SQLiteTest.AppDefinitionのIdの最大値を求める
+/// TODO: Idをインタフェース化してそれに適用できるようにする
+/// </summary>
+/// <param name="appDef"></param>
+let maxId (appDef : SQLiteTest.AppDefinition list) =
+    appDef |> List.map (fun x -> x.Id) |> List.max
+
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
+    // 正規化パスをキーとしてAppDefinitionsを引く
     let appDict =
         appDefs
         |> List.map (fun x -> canonicalize x.Path)
