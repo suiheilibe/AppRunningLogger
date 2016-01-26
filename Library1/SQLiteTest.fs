@@ -8,9 +8,9 @@ open System
 open System.Collections.Generic
 
 type AppDefinition () =
-    [<PrimaryKey;AutoIncrement>]
+    [<PrimaryKey;Unique>]
     member val Id : int64 = 0L with get, set
-    [<Indexed>]
+    [<Unique>]
     member val Path : string = "" with get, set
     interface IComparable<AppDefinition> with
         member this.CompareTo(o : AppDefinition) = this.Id.CompareTo(o.Id)
