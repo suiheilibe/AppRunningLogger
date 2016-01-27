@@ -105,6 +105,8 @@ let rec mainLoop (state : AppRunningLoggerState) =
         appDefs
         |> List.map (fun x -> canonicalize x.Path)
         |> toDictWithOptionalKeys appDefs
+    // 実行プロセスのリスト
+    // TODO: 権限によって取得される内容に違いがあるかを確認する
     let procs = getProcesses() |> List.ofArray
     let procSubs = procToProcSub procs
     // (CanonicalPath * ProcessSub)
