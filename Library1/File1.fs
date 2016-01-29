@@ -6,9 +6,10 @@ open System.Threading
 open System.Collections.Generic
 
 type AppRunningLoggerState =
-    { Connection     : SQLiteTest.DBConnection
-      AppDefinitions : SQLiteTest.AppDefinition list
-      AppRunningLogs : SQLiteTest.AppRunningLog list
+    { Connection         : SQLiteTest.DBConnection
+      AppDefinitions     : SQLiteTest.AppDefinition list
+      AppDefinitionMaxId : int64
+      AppRunningLogs     : SQLiteTest.AppRunningLog list
     }
 
 type ProcessSub =
@@ -100,7 +101,6 @@ let maxId (appDef : SQLiteTest.AppDefinition list) =
 
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
-    let appDefMaxId = maxId appDefs
     // 正規化パスをキーとしてAppDefinitionsを引く
     let appDict =
         appDefs
@@ -118,7 +118,7 @@ let rec mainLoop (state : AppRunningLoggerState) =
     let newAppDefs =
         procPairs
         |> List.filter (fun x -> fst x |> appDict.ContainsKey |> not)
-        |> List.map (fun x -> SQLiteTest.AppDefinition(Path = (snd x).FileName))
+        |> List.mapi (fun i x -> SQLiteTest.AppDefinition(Id = appDefMaxId + int64 i, Path = (snd x).FileName))
     newAppDefs
     |> SQLiteTest.addAppDefinition state.Connection
     let nextAppDefs1 = SQLiteTest.getAppDefinition state.Connection |> List.ofSeq
@@ -127,13 +127,13 @@ let rec mainLoop (state : AppRunningLoggerState) =
     let nextAppDefs = List.append newAppDefs appDefs
     printfn "%s" <| dateTimeNow().ToString()
     Thread.Sleep 1000
-    mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs; AppRunningLogs = state.AppRunningLogs }
+    mainLoop { Connection = state.Connection; AppDefinitions = nextAppDefs; AppRunningLogs = state.AppRunningLogs; AppDefinitionMaxId = appDefMaxId + int64 newAppDefs.Length }
    
 let startMainLoop() =
     try
         let conn = SQLiteTest.initMainDB()
         let appDefs = SQLiteTest.getAppDefinition conn |> List.ofSeq
         let appLogs = SQLiteTest.getAppRunningLog conn 0L |> List.ofSeq
-        mainLoop { Connection = conn; AppDefinitions = appDefs; AppRunningLogs = appLogs }
+        mainLoop { Connection = conn; AppDefinitions = appDefs; AppRunningLogs = appLogs; AppDefinitionMaxId = maxId appDefs }
     with | ex -> printfn "%s" ex.StackTrace
     ()
