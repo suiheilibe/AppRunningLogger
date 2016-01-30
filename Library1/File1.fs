@@ -17,6 +17,9 @@ type ProcessSub =
       Id       : int
     }
 
+/// <summary>
+/// Process.GetProcesses により実行中のプロセス一覧を取得
+/// </summary>
 let getProcesses = Process.GetProcesses : unit -> Process []
 
 let dateTimeNow() = DateTime.Now : DateTime
