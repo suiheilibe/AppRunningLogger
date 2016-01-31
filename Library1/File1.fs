@@ -18,10 +18,13 @@ type ProcessSub =
     }
 
 /// <summary>
-/// Process.GetProcesses により実行中のプロセス一覧を取得
+/// Process.GetProcessesにより実行中のプロセス一覧を取得
 /// </summary>
 let getProcesses = Process.GetProcesses : unit -> Process []
 
+/// <summary>
+/// 現在の日時をDateTimeで取得
+/// </summary>
 let dateTimeNow() = DateTime.Now : DateTime
 
 /// <summary>
