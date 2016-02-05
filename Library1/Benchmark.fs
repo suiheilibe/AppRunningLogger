@@ -1,6 +1,7 @@
 ﻿module AppRunningLogger.Benchmark
 
 open SQLite.Net.Attributes
+open System
 
 type TestTable_A () =
     [<PrimaryKey;Unique>]
@@ -17,7 +18,9 @@ type TestTable_C () =
 type TestTable_D () =
     member val Id : int64 = 0L with get, set
 
-
+let randomList n seed =
+    let rnd = Random(seed)
+    List.init n (fun i -> rnd.Next())
 
 let test () =
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
