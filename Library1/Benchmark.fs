@@ -23,5 +23,9 @@ let randomList n seed =
     List.init n (fun i -> rnd.Next())
 
 let test () =
+    let len = Int32.MaxValue
+    let seed = 1
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
+    let intList = randomList len seed
+    List.iter (printfn "%d") intList
     ()
