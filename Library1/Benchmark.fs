@@ -23,7 +23,7 @@ let randomList n seed =
     List.init n (fun i -> rnd.Next())
 
 let test () =
-    let len = Int32.MaxValue
+    let len = Int32.MaxValue / 8
     let seed = 1
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
     let intList = randomList len seed
