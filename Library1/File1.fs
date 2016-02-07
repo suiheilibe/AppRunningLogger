@@ -107,6 +107,7 @@ let maxId (appDef : SQLiteTest.AppDefinition list) =
 
 let rec mainLoop (state : AppRunningLoggerState) =
     let appDefs = state.AppDefinitions
+    let appDefMaxId = state.AppDefinitionMaxId
     // 正規化パスをキーとしてAppDefinitionsを引く
     let appDict =
         appDefs
