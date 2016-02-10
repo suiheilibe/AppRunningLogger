@@ -12,7 +12,8 @@ namespace AppRunningLogger
     {
         static void Main(string[] args)
         {
-            File1.startMainLoop();
+            //File1.startMainLoop();
+            Benchmark.test();
         }
     }
 }
