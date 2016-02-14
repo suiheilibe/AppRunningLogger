@@ -26,6 +26,10 @@ let test () =
     let len = Int32.MaxValue / 8
     let seed = 1
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
+    conn.CreateTable<TestTable_A>() |> ignore
+    conn.CreateTable<TestTable_B>() |> ignore
+    conn.CreateTable<TestTable_C>() |> ignore
+    conn.CreateTable<TestTable_D>() |> ignore
     let intList = randomList len seed
     List.iter (printfn "%d") intList
     ()
