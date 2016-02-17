@@ -26,6 +26,7 @@ let test () =
     let len = Int32.MaxValue / 8
     let seed = 1
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
+    let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
     conn.CreateTable<TestTable_A>() |> ignore
     conn.CreateTable<TestTable_B>() |> ignore
     conn.CreateTable<TestTable_C>() |> ignore
