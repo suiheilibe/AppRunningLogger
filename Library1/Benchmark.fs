@@ -29,7 +29,7 @@ let test () =
     let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
     tables
     |> List.iter (fun x ->
-        let createTable = conn.GetType().GetMethod("CreateTable").MakeGenericMethod(x)
+        let createTable = conn.GetType().GetMethod("CreateTable", [||]).MakeGenericMethod(x)
         createTable.Invoke(conn, null) |> ignore
     )
     let intList = randomList len seed
