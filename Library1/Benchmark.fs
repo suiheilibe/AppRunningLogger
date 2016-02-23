@@ -34,5 +34,5 @@ let test () =
         createTableGeneric.Invoke(conn, null) |> ignore
     )
     let intList = randomList len seed
-    List.iter (printfn "%d") intList
+    let a = List.map (fun x -> TestTable_A(Id = (int64) x)) intList
     ()
