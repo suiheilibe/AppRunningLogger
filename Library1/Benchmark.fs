@@ -31,11 +31,14 @@ let test () =
     tables
     |> List.iter (fun x ->
         let createTableGeneric = createTable.MakeGenericMethod(x)
-        createTableGeneric.Invoke(conn, null) |> ignore
+        //createTableGeneric.Invoke(conn, null) |> ignore
+        let ctor = x.GetConstructor(Type.EmptyTypes)
+        ()
     )
     let intList = randomList len seed
     let a = List.map (fun x -> TestTable_A(Id = (int64) x)) intList
     let b = List.map (fun x -> TestTable_B(Id = (int64) x)) intList
     let c = List.map (fun x -> TestTable_C(Id = (int64) x)) intList
     let d = List.map (fun x -> TestTable_D(Id = (int64) x)) intList
+
     ()
