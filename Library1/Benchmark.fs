@@ -33,6 +33,7 @@ let test () =
         let createTableGeneric = createTable.MakeGenericMethod(x)
         //createTableGeneric.Invoke(conn, null) |> ignore
         let ctor = x.GetConstructor(Type.EmptyTypes)
+        let obj = ctor.Invoke([||])
         ()
     )
     let intList = randomList len seed
