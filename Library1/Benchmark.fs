@@ -3,6 +3,9 @@
 open SQLite.Net.Attributes
 open System
 
+/// <summary>
+/// PrimaryKey, Unique属性
+/// </summary>
 type TestTable_A () =
     [<PrimaryKey;Unique>]
     member val Id : int64 = 0L with get, set
