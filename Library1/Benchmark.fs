@@ -10,6 +10,9 @@ type TestTable_A () =
     [<PrimaryKey;Unique>]
     member val Id : int64 = 0L with get, set
 
+/// <summary>
+/// PrimaryKey属性
+/// </summary>
 type TestTable_B () =
     [<PrimaryKey>]
     member val Id : int64 = 0L with get, set
