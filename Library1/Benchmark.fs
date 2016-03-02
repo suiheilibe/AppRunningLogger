@@ -38,6 +38,7 @@ let test () =
     |> List.iter (fun x ->
         let createTableGeneric = createTable.MakeGenericMethod(x)
         //createTableGeneric.Invoke(conn, null) |> ignore
+        let pi = x.GetProperty("Id")
         let ctor = x.GetConstructor(Type.EmptyTypes)
         let obj = ctor.Invoke([||])
         ()
