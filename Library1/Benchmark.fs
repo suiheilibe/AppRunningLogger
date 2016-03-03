@@ -41,6 +41,7 @@ let test () =
         let pi = x.GetProperty("Id")
         let ctor = x.GetConstructor(Type.EmptyTypes)
         let obj = ctor.Invoke([||])
+        pi.SetValue(obj, 1L)
         ()
     )
     let intList = randomList len seed
