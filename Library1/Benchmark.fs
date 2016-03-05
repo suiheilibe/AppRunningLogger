@@ -34,20 +34,19 @@ let test () =
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
     let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
     let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<SQLite.Net.Interop.CreateFlags>|])
-    tables
-    |> List.iter (fun x ->
-        let createTableGeneric = createTable.MakeGenericMethod(x)
-        //createTableGeneric.Invoke(conn, null) |> ignore
-        let pi = x.GetProperty("Id")
-        let ctor = x.GetConstructor(Type.EmptyTypes)
-        let obj = ctor.Invoke([||])
-        pi.SetValue(obj, 1L)
-        ()
-    )
     let intList = randomList len seed
-    let a = List.map (fun x -> TestTable_A(Id = (int64) x)) intList
-    let b = List.map (fun x -> TestTable_B(Id = (int64) x)) intList
-    let c = List.map (fun x -> TestTable_C(Id = (int64) x)) intList
-    let d = List.map (fun x -> TestTable_D(Id = (int64) x)) intList
-
+    let lists =
+        tables
+        |> List.map (fun x ->
+            let createTableGeneric = createTable.MakeGenericMethod(x)
+            //createTableGeneric.Invoke(conn, null) |> ignore
+            intList
+            |> List.map (fun v ->
+                let pi = x.GetProperty("Id")
+                let ctor = x.GetConstructor(Type.EmptyTypes)
+                let obj = ctor.Invoke([||])
+                pi.SetValue(obj, 1L)
+                obj
+            )
+        )
     ()
