@@ -29,7 +29,7 @@ let randomList n seed =
     List.init n (fun i -> rnd.Next())
 
 let test () =
-    let len = Int32.MaxValue / 8
+    let len = 10000
     let seed = 1
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
     let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
