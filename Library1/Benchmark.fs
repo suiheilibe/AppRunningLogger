@@ -17,6 +17,9 @@ type TestTable_B () =
     [<PrimaryKey>]
     member val Id : int64 = 0L with get, set
 
+/// <summary>
+/// Unique属性
+/// </summary>
 type TestTable_C () =
     [<Unique>]
     member val Id : int64 = 0L with get, set
