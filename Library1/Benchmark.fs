@@ -24,6 +24,9 @@ type TestTable_C () =
     [<Unique>]
     member val Id : int64 = 0L with get, set
 
+/// <summary>
+/// 属性なし
+/// </summary>
 type TestTable_D () =
     member val Id : int64 = 0L with get, set
 
