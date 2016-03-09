@@ -45,7 +45,7 @@ let test () =
         tables
         |> List.map (fun x ->
             let createTableGeneric = createTable.MakeGenericMethod(x)
-            //createTableGeneric.Invoke(conn, null) |> ignore
+            createTableGeneric.Invoke(conn, null) |> ignore
             intList
             |> List.map (fun v ->
                 let pi = x.GetProperty("Id")
