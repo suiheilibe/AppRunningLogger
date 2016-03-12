@@ -30,6 +30,11 @@ type TestTable_C () =
 type TestTable_D () =
     member val Id : int64 = 0L with get, set
 
+/// <summary>
+/// System.Randomによるランダムint値リストを得る
+/// </summary>
+/// <param name="n"></param>
+/// <param name="seed"></param>
 let randomList n seed =
     let rnd = Random(seed)
     List.init n (fun i -> rnd.Next())
