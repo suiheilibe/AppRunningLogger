@@ -1,6 +1,7 @@
 ﻿module AppRunningLogger.Benchmark
 
 open SQLite.Net.Attributes
+open SQLite.Net.Interop
 open System
 
 /// <summary>
@@ -50,7 +51,7 @@ let test () =
         tables
         |> List.map (fun x ->
             let createTableGeneric = createTable.MakeGenericMethod(x)
-            createTableGeneric.Invoke(conn, null) |> ignore
+            createTableGeneric.Invoke(conn, [|CreateFlags.None|]) |> ignore
             intList
             |> List.map (fun v ->
                 let pi = x.GetProperty("Id")
