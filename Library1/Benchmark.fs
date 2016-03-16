@@ -60,5 +60,6 @@ let test () =
                 pi.SetValue(obj, 1L)
                 obj
             )
+            |> conn.InsertAll
         )
     ()
