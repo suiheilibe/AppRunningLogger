@@ -45,7 +45,7 @@ let test () =
     let seed = 1
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
     let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
-    let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<SQLite.Net.Interop.CreateFlags>|])
+    let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<CreateFlags>|])
     let intList = randomList len seed
     let lists =
         tables
