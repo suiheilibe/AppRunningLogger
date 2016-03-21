@@ -32,13 +32,11 @@ type TestTable_D () =
     member val Id : int64 = 0L with get, set
 
 /// <summary>
-/// System.Randomによるランダムint値リストを得る
+/// int値リストを得る
 /// </summary>
 /// <param name="n"></param>
-/// <param name="seed"></param>
-let randomList n seed =
-    let rnd = Random(seed)
-    List.init n (fun i -> rnd.Next())
+let intList n =
+    List.init n (fun i -> i)
 
 let test () =
     let len = 10000
@@ -46,7 +44,7 @@ let test () =
     let conn = SQLiteTest.newSQLiteConnection "benchmark.db"
     let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
     let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<CreateFlags>|])
-    let intList = randomList len seed
+    let intList = intList len
     let lists =
         tables
         |> List.map (fun x ->
