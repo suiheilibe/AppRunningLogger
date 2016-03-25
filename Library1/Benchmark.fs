@@ -60,6 +60,7 @@ let test () =
                     pi.SetValue(obj, 1L)
                     obj
                 )
+            objList |> List.iter (fun x -> printfn "")
             objList |> conn.InsertAll // Constraint
         )
     ()
