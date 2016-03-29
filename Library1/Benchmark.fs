@@ -51,11 +51,11 @@ let test () =
         |> List.map (fun x ->
             let createTableGeneric = createTable.MakeGenericMethod(x)
             createTableGeneric.Invoke(conn, [|CreateFlags.None|]) |> ignore
+            let pi = x.GetProperty("Id")
+            let ctor = x.GetConstructor(Type.EmptyTypes)
             let objList =
                 intList
                 |> List.map (fun v ->
-                    let pi = x.GetProperty("Id")
-                    let ctor = x.GetConstructor(Type.EmptyTypes)
                     let obj = ctor.Invoke([||])
                     pi.SetValue(obj, 1L)
                     obj
