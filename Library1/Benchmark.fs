@@ -57,10 +57,10 @@ let test () =
                 intList
                 |> List.map (fun v ->
                     let obj = ctor.Invoke([||])
-                    pi.SetValue(obj, 1L)
+                    pi.SetValue(obj, (int64)v)
                     obj
                 )
-            objList |> List.iter (fun x -> printfn "")
+            objList |> List.iter (fun x -> pi.GetValue(x).ToString() |> printfn "%s")
             objList |> conn.InsertAll // Constraint
         )
     ()
