@@ -59,7 +59,11 @@ let test () =
                     pi.SetValue(obj, (int64)v)
                     obj
                 )
-            objList |> List.iter (fun x -> pi.GetValue(x).ToString() |> printfn "%s")
-            objList |> conn.InsertAll // Constraint
+            //objList |> List.iter (fun x -> pi.GetValue(x).ToString() |> printfn "%s")
+            let startTime = DateTime.Now
+            let result = objList |> conn.InsertAll // Constraint
+            let endTime = DateTime.Now
+            (startTime - endTime).ToString() |> printfn "%s"
+            ()
         )
     ()
