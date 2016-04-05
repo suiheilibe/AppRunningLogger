@@ -64,6 +64,5 @@ let test () =
             let result = objList |> conn.InsertAll // Constraint
             let endTime = DateTime.Now
             (startTime - endTime).ToString() |> printfn "%s"
-            ()
         )
     ()
