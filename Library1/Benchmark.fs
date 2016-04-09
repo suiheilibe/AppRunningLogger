@@ -42,6 +42,7 @@ let test () =
     let len = 10000
     let seed = 1
     let fileName = "benchmark.db"
+    IO.File.Delete fileName
     let conn = SQLiteTest.newSQLiteConnection fileName
     let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
     let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<CreateFlags>|])
