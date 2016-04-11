@@ -44,7 +44,8 @@ let test () =
     let fileName = "benchmark.db"
     IO.File.Delete fileName
     let conn = SQLiteTest.newSQLiteConnection fileName
-    let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
+    //let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
+    let tables = [typeof<TestTable_A>];
     let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<CreateFlags>|])
     let intList = intList len
     let lists =
