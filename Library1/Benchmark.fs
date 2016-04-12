@@ -38,34 +38,35 @@ type TestTable_D () =
 let intList n =
     List.init n (fun i -> i)
 
-let test () =
+let run (conn : SQLite.Net.SQLiteConnection) (tables : Type list) =
+    let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<CreateFlags>|])
     let len = 10000
-    let seed = 1
+    let intList = intList len
+    tables
+    |> List.map (fun x ->
+        let createTableGeneric = createTable.MakeGenericMethod(x)
+        createTableGeneric.Invoke(conn, [|CreateFlags.None|]) |> ignore
+        let pi = x.GetProperty("Id")
+        let ctor = x.GetConstructor(Type.EmptyTypes)
+        let objList =
+            intList
+            |> List.map (fun v ->
+                let obj = ctor.Invoke([||])
+                pi.SetValue(obj, (int64)v)
+                obj
+            )
+        //objList |> List.iter (fun x -> pi.GetValue(x).ToString() |> printfn "%s")
+        let startTime = DateTime.Now
+        let result = objList |> conn.InsertAll // Constraint
+        let endTime = DateTime.Now
+        (startTime - endTime).ToString() |> printfn "%s"
+    )
+
+let test () =
     let fileName = "benchmark.db"
     IO.File.Delete fileName
     let conn = SQLiteTest.newSQLiteConnection fileName
     //let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
     let tables = [typeof<TestTable_A>];
-    let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<CreateFlags>|])
-    let intList = intList len
-    let lists =
-        tables
-        |> List.map (fun x ->
-            let createTableGeneric = createTable.MakeGenericMethod(x)
-            createTableGeneric.Invoke(conn, [|CreateFlags.None|]) |> ignore
-            let pi = x.GetProperty("Id")
-            let ctor = x.GetConstructor(Type.EmptyTypes)
-            let objList =
-                intList
-                |> List.map (fun v ->
-                    let obj = ctor.Invoke([||])
-                    pi.SetValue(obj, (int64)v)
-                    obj
-                )
-            //objList |> List.iter (fun x -> pi.GetValue(x).ToString() |> printfn "%s")
-            let startTime = DateTime.Now
-            let result = objList |> conn.InsertAll // Constraint
-            let endTime = DateTime.Now
-            (startTime - endTime).ToString() |> printfn "%s"
-        )
+    let lists = run conn tables
     ()
