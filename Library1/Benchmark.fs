@@ -38,10 +38,8 @@ type TestTable_D () =
 let intList n =
     List.init n (fun i -> i)
 
-let run (conn : SQLite.Net.SQLiteConnection) (tables : Type list) =
+let run (conn : SQLite.Net.SQLiteConnection) (tables : Type list) (data : int list) =
     let createTable = conn.GetType().GetMethod("CreateTable", [|typeof<CreateFlags>|])
-    let len = 10000
-    let intList = intList len
     tables
     |> List.map (fun x ->
         let createTableGeneric = createTable.MakeGenericMethod(x)
@@ -49,7 +47,7 @@ let run (conn : SQLite.Net.SQLiteConnection) (tables : Type list) =
         let pi = x.GetProperty("Id")
         let ctor = x.GetConstructor(Type.EmptyTypes)
         let objList =
-            intList
+            data
             |> List.map (fun v ->
                 let obj = ctor.Invoke([||])
                 pi.SetValue(obj, (int64)v)
@@ -68,5 +66,7 @@ let test () =
     let conn = SQLiteTest.newSQLiteConnection fileName
     //let tables = [typeof<TestTable_A>; typeof<TestTable_B>; typeof<TestTable_C>; typeof<TestTable_D>];
     let tables = [typeof<TestTable_A>];
-    let lists = run conn tables
+    let len = 10000
+    let intList = intList len
+    let lists = run conn tables intList
     ()
