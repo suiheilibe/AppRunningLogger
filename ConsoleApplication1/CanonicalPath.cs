@@ -15,5 +15,10 @@ namespace AppRunningLogger
             canonicalPath = Path.GetFullPath((new Uri(path)).LocalPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             .ToUpperInvariant();
         }
+
+        public string RawPath
+        {
+            get { return this.canonicalPath; }
+        }
     }
 }
