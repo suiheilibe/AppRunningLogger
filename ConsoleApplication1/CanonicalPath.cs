@@ -20,5 +20,10 @@ namespace AppRunningLogger
         {
             get { return this.canonicalPath; }
         }
+
+        public override int GetHashCode()
+        {
+            return this.RawPath.GetHashCode();
+        }
     }
 }
