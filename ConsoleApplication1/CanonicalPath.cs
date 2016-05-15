@@ -25,5 +25,18 @@ namespace AppRunningLogger
         {
             return this.RawPath.GetHashCode();
         }
+
+        public override bool Equals(object obj)
+        {
+            var cpath = obj as CanonicalPath;
+            if (cpath == null)
+            {
+                return false;
+            }
+            else
+            {
+                return this.RawPath.Equals(cpath.RawPath);
+            }
+        }
     }
 }
