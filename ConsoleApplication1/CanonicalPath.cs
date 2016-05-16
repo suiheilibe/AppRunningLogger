@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AppRunningLogger
 {
-    class CanonicalPath
+    class CanonicalPath : IEquatable<CanonicalPath>
     {
         string canonicalPath;
         CanonicalPath(string path)
@@ -37,6 +37,11 @@ namespace AppRunningLogger
             {
                 return this.RawPath.Equals(cpath.RawPath);
             }
+        }
+
+        public bool Equals(CanonicalPath o)
+        {
+            return this.RawPath.Equals(o.RawPath);
         }
     }
 }
