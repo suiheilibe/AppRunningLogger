@@ -1,4 +1,4 @@
-﻿namespace AppRunningLogger
+﻿namespace AppRunningLogger.Obsoleted
 
 open System
 open System.IO
