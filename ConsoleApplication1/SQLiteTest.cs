@@ -35,5 +35,10 @@ namespace AppRunningLogger
             DateTime Begin { get; set; } = DateTime.MinValue;
             DateTime End { get; set; } = DateTime.MinValue;
         }
+
+        SQLiteConnection newSQLiteConnection(string dbName)
+        {
+            return new SQLiteConnection(new SQLitePlatformWin32(), dbName, true);
+        }
     }
 }
