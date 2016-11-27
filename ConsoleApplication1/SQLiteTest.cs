@@ -40,5 +40,11 @@ namespace AppRunningLogger
         {
             return new SQLiteConnection(new SQLitePlatformWin32(), dbName, true);
         }
+
+        void initialSettings(SQLiteConnection conn)
+        {
+            conn.ExecuteScalar<string>("PRAGMA synchronous = NORMAL");
+            conn.ExecuteScalar<string>("PRAGMA journal_mode = WAL");
+        }
     }
 }
